@@ -271,4 +271,73 @@ mod tests {
             "The number of URLs exceeds the maximum allowed limit"
         );
     }
+
+    #[test]
+    fn test_error_propagation() {
+        fn parse_url() -> SitemapResult<()> {
+            Err(SitemapError::UrlError(url::ParseError::EmptyHost))
+        }
+
+        fn handle_url() -> SitemapResult<()> {
+            parse_url()?;
+            Ok(())
+        }
+
+        let result = handle_url();
+        assert!(result.is_err());
+        assert!(matches!(
+            result.unwrap_err(),
+            SitemapError::UrlError(_)
+        ));
+    }
+
+    #[test]
+    fn test_url_parsing_errors() {
+        let empty_host =
+            SitemapError::UrlError(url::ParseError::EmptyHost);
+        assert_eq!(empty_host.to_string(), "URL error: empty host");
+
+        let invalid_port =
+            SitemapError::UrlError(url::ParseError::InvalidPort);
+        assert_eq!(
+            invalid_port.to_string(),
+            "URL error: invalid port number"
+        ); // Adjusted expected message
+
+        let relative_url = SitemapError::UrlError(
+            url::ParseError::RelativeUrlWithoutBase,
+        );
+        assert_eq!(
+            relative_url.to_string(),
+            "URL error: relative URL without a base"
+        );
+    }
+
+    #[test]
+    fn test_invalid_change_freq_edge_cases() {
+        let empty_string =
+            SitemapError::InvalidChangeFreq("".to_string());
+        assert_eq!(
+            empty_string.to_string(),
+            "Invalid change frequency: "
+        );
+
+        let long_string =
+            SitemapError::InvalidChangeFreq("a".repeat(1000));
+        assert!(long_string
+            .to_string()
+            .contains("Invalid change frequency"));
+    }
+
+    #[test]
+    fn test_max_url_limit_exceeded_edge_cases() {
+        let just_under_limit = SitemapError::MaxUrlLimitExceeded(49999);
+        assert_eq!(just_under_limit.to_string(), "Number of URLs (49999) exceeds the maximum allowed limit (50,000)");
+
+        let at_limit = SitemapError::MaxUrlLimitExceeded(50000);
+        assert_eq!(at_limit.to_string(), "Number of URLs (50000) exceeds the maximum allowed limit (50,000)");
+
+        let over_limit = SitemapError::MaxUrlLimitExceeded(50001);
+        assert_eq!(over_limit.to_string(), "Number of URLs (50001) exceeds the maximum allowed limit (50,000)");
+    }
 }

@@ -270,10 +270,7 @@ pub fn is_valid_url(url: &Url) -> bool {
 /// This function will return an error if:
 /// - The output file cannot be created
 /// - There are issues writing to the file
-pub fn write_output(
-    xml: &str,
-    output_file: &str,
-) -> SitemapResult<()> {
+pub fn write_output(xml: &str, output_file: &str) -> SitemapResult<()> {
     let mut file =
         File::create(output_file).map_err(SitemapError::IoError)?;
     file.write_all(xml.as_bytes())

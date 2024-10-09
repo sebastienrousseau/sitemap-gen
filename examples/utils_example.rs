@@ -1,10 +1,10 @@
 #![allow(missing_docs)]
-use sitemap_gen::utils::{
-    create_cli, is_valid_url, normalize_urls,
-    read_urls_from_file, write_output, format_date,
-};
 use dtt::dtt_now;
 use sitemap_gen::error::SitemapError;
+use sitemap_gen::utils::{
+    create_cli, format_date, is_valid_url, normalize_urls,
+    read_urls_from_file, write_output,
+};
 
 /// Entry point for the sitemap-gen utility examples.
 ///
@@ -89,7 +89,10 @@ fn format_date_example() -> Result<(), SitemapError> {
     let now = dtt_now!();
     let formatted_date = format_date(now);
 
-    println!("    ✅ Current date formatted successfully: {}", formatted_date);
+    println!(
+        "    ✅ Current date formatted successfully: {}",
+        formatted_date
+    );
     Ok(())
 }
 
