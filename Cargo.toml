@@ -1,0 +1,213 @@
+# -----------------------------------------------------------------------------
+# SiteMap Gen - A Rust library for efficient generation and optimization of sitemaps, supporting various formats and customizations.
+# -----------------------------------------------------------------------------
+
+[package]
+name = "sitemap-gen"
+version = "0.0.1"
+edition = "2021"
+rust-version = "1.56.0"
+license = "MIT OR Apache-2.0"
+description = """
+A robust Rust library designed for efficient generation and optimization of sitemaps, supporting various formats and customizations.
+"""
+homepage = "https://sitemap-gen.co/"
+documentation = "https://doc.sitemap-gen.co/sitemap_gen/"
+repository = "https://github.com/sebastienrousseau/sitemap-gen"
+readme = "README.md"
+build = "build.rs"
+
+# -----------------------------------------------------------------------------
+# Crate Configuration
+# -----------------------------------------------------------------------------
+categories = [
+    "web-programming",
+    "command-line-utilities",
+    "data-structures",
+    "parsing",
+    "development-tools"
+]
+
+keywords = ["html", "web_development", "seo", "html-generator"]
+
+[lib]
+name = "sitemap_gen"
+path = "src/lib.rs"
+
+[[bin]]
+name = "sitemap-gen"
+path = "src/main.rs"
+
+# -----------------------------------------------------------------------------
+# Dependencies
+# -----------------------------------------------------------------------------
+
+[dependencies]
+# Dependencies required for building and running the project.
+clap = "4.5"
+dtt = "0.0.8"
+env_logger = "0.11"
+html-generator = "0.0.1"
+indicatif = "0.17"
+lazy_static = "1.5"
+log = "0.4"
+regex = "1.11"
+scraper = "0.20"
+tempfile = "3.13"
+thiserror = "1.0"
+time = "0.3"
+tokio = "1.40"
+url = "2.5"
+xml-rs = "0.8"
+
+# -----------------------------------------------------------------------------
+# Build Dependencies
+# -----------------------------------------------------------------------------
+
+[build-dependencies]
+# Dependencies for build scripts.
+version_check = "0.9"
+
+# -----------------------------------------------------------------------------
+# Development Dependencies
+# -----------------------------------------------------------------------------
+
+[dev-dependencies]
+# Dependencies required for testing and development.
+criterion = "0.5"
+assert_fs = "1.1"
+predicates = "3.1"
+pretty_assertions = "1.4"
+
+# -----------------------------------------------------------------------------
+# Examples
+# -----------------------------------------------------------------------------
+
+# [[example]]
+# name = "error_example"
+# path = "examples/error_example.rs"
+
+# -----------------------------------------------------------------------------
+# Criterion Benchmark
+# -----------------------------------------------------------------------------
+
+[[bench]]
+name = "sitemap_benchmark"
+harness = false
+
+[profile.bench]
+debug = true
+
+# -----------------------------------------------------------------------------
+# Features
+# -----------------------------------------------------------------------------
+
+[features]
+# Features that can be enabled or disabled.
+default = []
+async = []
+
+# -----------------------------------------------------------------------------
+# Documentation Configuration
+# -----------------------------------------------------------------------------
+
+[package.metadata.docs.rs]
+# Build docs with all crate features enabled to cover the entire API.
+all-features = true
+# Arguments to pass to rustdoc when building the docs.
+rustdoc-args = ["--cfg", "docsrs"]
+# Target platform for the docs, ensuring compatibility with common Linux servers.
+targets = ["x86_64-unknown-linux-gnu"]
+
+# Linting config
+[lints.rust]
+
+## Warn
+missing_copy_implementations = "warn"
+missing_docs = "warn"
+unstable_features = "warn"
+# unused_crate_dependencies = "warn"
+unused_extern_crates = "warn"
+unused_results = "warn"
+
+## Allow
+bare_trait_objects = "allow"
+elided_lifetimes_in_paths = "allow"
+non_camel_case_types = "allow"
+non_upper_case_globals = "allow"
+trivial_bounds = "allow"
+unsafe_code = "allow"
+
+## Forbid
+missing_debug_implementations = "forbid"
+non_ascii_idents = "forbid"
+unreachable_pub = "forbid"
+
+## Deny
+dead_code = "deny"
+deprecated_in_future = "deny"
+ellipsis_inclusive_range_patterns = "deny"
+explicit_outlives_requirements = "deny"
+future_incompatible = { level = "deny", priority = -1 }
+keyword_idents = { level = "deny", priority = -1 }
+macro_use_extern_crate = "deny"
+meta_variable_misuse = "deny"
+missing_fragment_specifier = "deny"
+noop_method_call = "deny"
+rust_2018_idioms = { level = "deny", priority = -1 }
+rust_2021_compatibility = { level = "deny", priority = -1 }
+single_use_lifetimes = "deny"
+trivial_casts = "deny"
+trivial_numeric_casts = "deny"
+unused = { level = "deny", priority = -1 }
+unused_features = "deny"
+unused_import_braces = "deny"
+unused_labels = "deny"
+unused_lifetimes = "deny"
+unused_macro_rules = "deny"
+unused_qualifications = "deny"
+variant_size_differences = "deny"
+
+
+[package.metadata.clippy]
+warn-lints = [
+    "clippy::all",
+    "clippy::pedantic",
+    "clippy::cargo",
+    "clippy::nursery",
+]
+
+[profile.dev]
+codegen-units = 256
+debug = true
+debug-assertions = true
+incremental = true
+lto = false
+opt-level = 0
+overflow-checks = true
+panic = 'unwind'
+rpath = false
+strip = false
+
+[profile.release]
+codegen-units = 1
+debug = false
+debug-assertions = false
+incremental = false
+lto = true
+opt-level = "s"
+overflow-checks = false
+panic = "abort"
+rpath = false
+strip = "symbols"
+
+[profile.test]
+codegen-units = 256
+debug = true
+debug-assertions = true
+incremental = true
+lto = false
+opt-level = 0
+overflow-checks = true
+rpath = false
+strip = false
