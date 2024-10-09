@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `sitemap_gen` crate."><title>sitemap_gen - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-6d8951b3ccd3cbca.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="sitemap_gen" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (6f4ae0f34 2024-10-08)" data-channel="nightly" data-search-js="search-e056c65ede92db13.js" data-settings-js="settings-805db61a62df4bd2.js" ><script src="../static.files/storage-1d39b6787ed640ff.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-f070b9041d14864c.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-0111fcff984fae8f.css"></noscript><link rel="icon" href="https://kura.pro/sitemap-gen/images/favicon.ico"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button><a class="logo-container" href="../sitemap_gen/index.html"><img src="https://kura.pro/sitemap-gen/images/logos/sitemap-gen.svg" alt=""></a></nav><nav class="sidebar"><div class="sidebar-crate"><a class="logo-container" href="../sitemap_gen/index.html"><img src="https://kura.pro/sitemap-gen/images/logos/sitemap-gen.svg" alt="logo"></a><h2><a href="../sitemap_gen/index.html">sitemap_<wbr>gen</a><span class="version">0.0.1</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#sitemap-gen-sitemap-gen" title="Sitemap Gen (sitemap-gen)">Sitemap Gen (sitemap-gen)</a><ul><li><a href="#overview" title="Overview">Overview</a></li><li><a href="#features" title="Features">Features</a></li><li><a href="#installation" title="Installation">Installation</a></li><li><a href="#usage" title="Usage">Usage</a></li><li><a href="#documentation" title="Documentation">Documentation</a></li><li><a href="#examples" title="Examples">Examples</a></li><li><a href="#contributing" title="Contributing">Contributing</a></li><li><a href="#license" title="License">License</a></li><li><a href="#acknowledgements" title="Acknowledgements">Acknowledgements</a></li></ul></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#types" title="Type Aliases">Type Aliases</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>sitemap_gen</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/sitemap_gen/lib.rs.html#3-47">source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><!-- markdownlint-disable MD033 MD041 -->
+<p><img src="https://kura.pro/sitemap-gen/images/logos/sitemap-gen.svg"
+alt="Sitemap Gen logo" height="66" align="right" /></p>
+<!-- markdownlint-enable MD033 MD041 -->
+<h2 id="sitemap-gen-sitemap-gen"><a class="doc-anchor" href="#sitemap-gen-sitemap-gen">§</a>Sitemap Gen (sitemap-gen)</h2>
+<p>A fast and efficient Rust library for generating and validating XML sitemaps.</p>
+<!-- markdownlint-disable MD033 MD041 -->
+<center>
+<!-- markdownlint-enable MD033 MD041 -->
+<p><a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/rust-f04041?style=for-the-badge&amp;labelColor=c0282d&amp;logo=rust" alt="Made With Love" /></a> <a href="https://crates.io/crates/sitemap-gen"><img src="https://img.shields.io/crates/v/sitemap-gen.svg?style=for-the-badge&amp;color=fc8d62&amp;logo=rust" alt="Crates.io" /></a> <a href="https://lib.rs/crates/sitemap-gen"><img src="https://img.shields.io/badge/lib.rs-v0.0.1-orange.svg?style=for-the-badge" alt="lib.rs" /></a> <a href="https://docs.rs/sitemap-gen"><img src="https://img.shields.io/badge/docs.rs-sitemap--gen-66c2a5?style=for-the-badge&amp;labelColor=555555&amp;logo=docs.rs" alt="Docs.rs" /></a> <a href="https://codecov.io/gh/sebastienrousseau/sitemap-gen"><img src="https://img.shields.io/codecov/c/github/sebastienrousseau/sitemap-gen?style=for-the-badge&amp;token=Q9KJ6XXL67&amp;logo=codecov" alt="Codecov" /></a> <a href="https://github.com/sebastienrousseau/sitemap-gen/actions?query=branch%3Amain"><img src="https://img.shields.io/github/actions/workflow/status/sebastienrousseau/sitemap-gen/release.yml?branch=main&amp;style=for-the-badge&amp;logo=github" alt="Build Status" /></a> <a href="https://github.com/sebastienrousseau/sitemap-gen"><img src="https://img.shields.io/badge/github-sebastienrousseau/sitemap--gen-8da0cb?style=for-the-badge&amp;labelColor=555555&amp;logo=github" alt="GitHub" /></a></p>
+<p>• <a href="https://sitemap-gen.co">Website</a> • <a href="https://docs.rs/sitemap-gen">Documentation</a> • <a href="https://github.com/sebastienrousseau/sitemap-gen/issues">Report Bug</a> • <a href="https://github.com/sebastienrousseau/sitemap-gen/issues">Request Feature</a> • <a href="https://github.com/sebastienrousseau/sitemap-gen/blob/main/CONTRIBUTING.md">Contributing Guidelines</a></p>
+<!-- markdownlint-disable MD033 MD041 -->
+</center>
+<!-- markdownlint-enable MD033 MD041 -->
+<h3 id="overview"><a class="doc-anchor" href="#overview">§</a>Overview</h3>
+<p>The <code>sitemap-gen</code> library provides a powerful solution for generating and optimizing XML sitemaps, essential for enhancing SEO and improving website visibility. It supports the creation of sitemaps for websites of any scale, with built-in validation and performance optimizations to ensure that your sitemaps comply with web standards.</p>
+<h3 id="features"><a class="doc-anchor" href="#features">§</a>Features</h3>
+<ul>
+<li><strong>XML Sitemap Generation</strong>: Efficiently generate well-structured XML sitemaps for websites.</li>
+<li><strong>URL Management</strong>: Add, validate, and normalize URLs easily within the sitemap.</li>
+<li><strong>Change Frequency Support</strong>: Specify how often pages are likely to change (daily, weekly, etc.).</li>
+<li><strong>Last Modified Dates</strong>: Include accurate timestamps for when pages were last modified.</li>
+<li><strong>Validation</strong>: Ensure that your sitemap adheres to size and URL limits as per SEO guidelines.</li>
+<li><strong>Performance Optimizations</strong>: Pre-allocate buffers and optimize memory usage for generating large sitemaps.</li>
+<li><strong>Asynchronous Processing</strong>: Leverage async functionality to generate sitemaps efficiently for larger sites.</li>
+</ul>
+<h3 id="installation"><a class="doc-anchor" href="#installation">§</a>Installation</h3>
+<p>Add this to your <code>Cargo.toml</code> to start using <code>sitemap-gen</code>:</p>
+<div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+sitemap-gen = &quot;0.0.1&quot;</code></pre></div><h3 id="usage"><a class="doc-anchor" href="#usage">§</a>Usage</h3>
+<p>Here’s an example of how to generate a sitemap:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>sitemap_gen::{Sitemap, ChangeFreq, SiteMapData};
+<span class="kw">use </span>url::Url;
+
+<span class="kw">fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt; {
+    <span class="comment">// Create a new sitemap
+    </span><span class="kw">let </span><span class="kw-2">mut </span>sitemap = Sitemap::new();
+
+    <span class="comment">// Add entries
+    </span><span class="kw">let </span>entry = SiteMapData {
+        loc: Url::parse(<span class="string">"https://example.com/"</span>)<span class="question-mark">?</span>,
+        lastmod: <span class="string">"2023-10-01"</span>.to_string(),
+        changefreq: ChangeFreq::Weekly,
+    };
+
+    sitemap.add_entry(entry)<span class="question-mark">?</span>;
+
+    <span class="comment">// Generate the XML
+    </span><span class="kw">let </span>xml = sitemap.to_xml()<span class="question-mark">?</span>;
+    <span class="macro">println!</span>(<span class="string">"{}"</span>, xml);
+
+    <span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<h3 id="documentation"><a class="doc-anchor" href="#documentation">§</a>Documentation</h3>
+<p>Full API documentation is available at <a href="https://docs.rs/sitemap-gen">docs.rs/sitemap-gen</a>.</p>
+<h3 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h3>
+<p>To explore more examples, clone the repository and run the following command:</p>
+<div class="example-wrap"><pre class="language-shell"><code>cargo run --example example_name</code></pre></div><h3 id="contributing"><a class="doc-anchor" href="#contributing">§</a>Contributing</h3>
+<p>We welcome contributions from the community! Please check our <a href="https://github.com/sebastienrousseau/sitemap-gen/blob/main/CONTRIBUTING.md">contributing guidelines</a> and feel free to submit issues or pull requests.</p>
+<h3 id="license"><a class="doc-anchor" href="#license">§</a>License</h3>
+<p>This project is licensed under either of the following licenses:</p>
+<ul>
+<li><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a></li>
+<li><a href="https://opensource.org/licenses/MIT">MIT License</a></li>
+</ul>
+<p>You can choose which one you prefer.</p>
+<h3 id="acknowledgements"><a class="doc-anchor" href="#acknowledgements">§</a>Acknowledgements</h3>
+<p>Special thanks to all contributors who have helped build and improve the <code>sitemap-gen</code> library.</p>
+<p>A Rust library for generating and managing sitemaps.</p>
+<p>This crate provides functionality to create, modify, and serialize XML sitemaps according to the <a href="https://www.sitemaps.org/protocol.html">Sitemaps XML format</a>.
+It includes support for handling various sitemap-specific data types and error conditions.</p>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name" id="reexport.SitemapError"><code>pub use error::<a class="enum" href="error/enum.SitemapError.html" title="enum sitemap_gen::error::SitemapError">SitemapError</a>;</code></div></li><li><div class="item-name" id="reexport.convert_date_format"><code>pub use sitemap::<a class="fn" href="sitemap/fn.convert_date_format.html" title="fn sitemap_gen::sitemap::convert_date_format">convert_date_format</a>;</code></div></li><li><div class="item-name" id="reexport.create_site_map_data"><code>pub use sitemap::<a class="fn" href="sitemap/fn.create_site_map_data.html" title="fn sitemap_gen::sitemap::create_site_map_data">create_site_map_data</a>;</code></div></li><li><div class="item-name" id="reexport.ChangeFreq"><code>pub use sitemap::<a class="enum" href="sitemap/enum.ChangeFreq.html" title="enum sitemap_gen::sitemap::ChangeFreq">ChangeFreq</a>;</code></div></li><li><div class="item-name" id="reexport.SiteMapData"><code>pub use sitemap::<a class="struct" href="sitemap/struct.SiteMapData.html" title="struct sitemap_gen::sitemap::SiteMapData">SiteMapData</a>;</code></div></li><li><div class="item-name" id="reexport.Sitemap"><code>pub use sitemap::<a class="struct" href="sitemap/struct.Sitemap.html" title="struct sitemap_gen::sitemap::Sitemap">Sitemap</a>;</code></div></li></ul><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="error/index.html" title="mod sitemap_gen::error">error</a></div><div class="desc docblock-short">Contains error types specific to sitemap operations.</div></li><li><div class="item-name"><a class="mod" href="prelude/index.html" title="mod sitemap_gen::prelude">prelude</a></div><div class="desc docblock-short">A prelude module for convenient importing of commonly used items.</div></li><li><div class="item-name"><a class="mod" href="sitemap/index.html" title="mod sitemap_gen::sitemap">sitemap</a></div><div class="desc docblock-short">Provides the core functionality for creating and managing sitemaps.</div></li><li><div class="item-name"><a class="mod" href="utils/index.html" title="mod sitemap_gen::utils">utils</a></div><div class="desc docblock-short">Utility functions and helper methods for sitemap operations.</div></li></ul><h2 id="types" class="section-header">Type Aliases<a href="#types" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="type" href="type.SitemapResult.html" title="type sitemap_gen::SitemapResult">Sitemap<wbr>Result</a></div><div class="desc docblock-short">Result type alias for sitemap operations.</div></li></ul></section></div></main></body></html>
