@@ -189,6 +189,11 @@ impl Sitemap {
         }
     }
 
+    /// Entry count of the sitemap.
+    pub fn entry_count(&self) -> usize {
+        self.entries.len()
+    }
+
     /// Adds a new entry to the sitemap.
     ///
     /// # Arguments
