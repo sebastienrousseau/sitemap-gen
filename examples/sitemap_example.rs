@@ -1,8 +1,10 @@
 #![allow(missing_docs)]
-use sitemap_gen::sitemap::{create_site_map_data, SiteMapData, Sitemap, ChangeFreq};
 use sitemap_gen::error::SitemapError;
-use url::Url;
+use sitemap_gen::sitemap::{
+    create_site_map_data, ChangeFreq, SiteMapData, Sitemap,
+};
 use std::collections::HashMap;
+use url::Url;
 
 /// Entry point for the sitemap-gen usage examples.
 ///
@@ -28,9 +30,16 @@ fn create_site_map_data_example() -> Result<(), SitemapError> {
     println!("---------------------------------------------");
 
     let mut metadata = HashMap::new();
-    let _ = metadata.insert("last_build_date".to_string(), "20 May 2023".to_string());
-    let _ = metadata.insert("changefreq".to_string(), "weekly".to_string());
-    let _ = metadata.insert("permalink".to_string(), "https://example.com".to_string());
+    let _ = metadata.insert(
+        "last_build_date".to_string(),
+        "20 May 2023".to_string(),
+    );
+    let _ =
+        metadata.insert("changefreq".to_string(), "weekly".to_string());
+    let _ = metadata.insert(
+        "permalink".to_string(),
+        "https://example.com".to_string(),
+    );
 
     let site_map_data = create_site_map_data(&metadata)?;
 
@@ -51,7 +60,10 @@ fn add_entry_to_sitemap_example() -> Result<(), SitemapError> {
     };
 
     sitemap.add_entry(entry)?;
-    println!("    ✅ Successfully added entry to sitemap. Total entries: {}", sitemap.len());
+    println!(
+        "    ✅ Successfully added entry to sitemap. Total entries: {}",
+        sitemap.len()
+    );
     Ok(())
 }
 

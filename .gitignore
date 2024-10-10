@@ -10,4 +10,5 @@ Icon?
 src/.DS_Store
 tarpaulin-report.html
 Cargo.lock
-sitemap.xml
+*.xml
+*.txt

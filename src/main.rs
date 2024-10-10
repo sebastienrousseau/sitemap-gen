@@ -64,3 +64,85 @@ fn main() -> SitemapResult<()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use std::fs;
+    use std::process::Command;
+
+    #[test]
+    fn test_generate_sitemap_with_single_url() {
+        let output = Command::new("cargo")
+            .arg("run")
+            .arg("--")
+            .arg("generate")
+            .arg("-o")
+            .arg("test_output.xml")
+            .arg("-u")
+            .arg("http://example.com")
+            .arg("-c")
+            .arg("weekly")
+            .output()
+            .expect("Failed to execute command");
+
+        assert!(output.status.success());
+        assert!(
+            fs::metadata("test_output.xml").is_ok(),
+            "Output file not created"
+        );
+    }
+
+    #[test]
+    fn test_generate_sitemap_with_invalid_url() {
+        let output = Command::new("cargo")
+            .arg("run")
+            .arg("--")
+            .arg("generate")
+            .arg("-o")
+            .arg("test_output.xml")
+            .arg("-u")
+            .arg("invalid-url")
+            .output()
+            .expect("Failed to execute command");
+
+        assert!(
+            !output.status.success(),
+            "Command should fail with invalid URL"
+        );
+
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        println!("stderr: {}", stderr); // Debugging output
+
+        // Assert against the actual error message
+        assert!(
+            stderr.contains("UrlError(RelativeUrlWithoutBase)"),
+            "Expected error about relative URL without base"
+        );
+    }
+
+    #[test]
+    fn test_generate_sitemap_with_input_file() {
+        fs::write(
+            "test_urls.txt",
+            "http://example.com\nhttp://example.org",
+        )
+        .expect("Failed to write test file");
+
+        let output = Command::new("cargo")
+            .arg("run")
+            .arg("--")
+            .arg("generate")
+            .arg("-o")
+            .arg("test_output.xml")
+            .arg("-i")
+            .arg("test_urls.txt")
+            .output()
+            .expect("Failed to execute command");
+
+        assert!(output.status.success());
+        assert!(
+            fs::metadata("test_output.xml").is_ok(),
+            "Output file not created"
+        );
+    }
+}
