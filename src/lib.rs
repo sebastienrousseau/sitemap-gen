@@ -179,4 +179,26 @@ mod tests {
         assert!(success.is_ok());
         assert!(failure.is_err());
     }
+    #[test]
+    fn test_valid_url_addition() {
+        // Create a new empty sitemap
+        let mut sitemap = Sitemap::new();
+
+        // Try to add a valid URL
+        let valid_url = Url::parse("http://example.com")
+            .expect("Failed to parse valid URL");
+
+        let result = sitemap.add_entry(SiteMapData {
+            loc: valid_url,
+            lastmod: "2024-10-08".to_string(),
+            changefreq: ChangeFreq::Daily,
+        });
+
+        // Assert that the entry was successfully added
+        assert!(result.is_ok(), "Failed to add valid URL to sitemap");
+
+        // Check that the sitemap now contains the entry
+        assert_eq!(sitemap.len(), 1);
+        assert!(!sitemap.is_empty());
+    }
 }
