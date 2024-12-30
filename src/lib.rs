@@ -1,4 +1,5 @@
-// src/lib.rs
+// Copyright © 2025 Sitemap Gen. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
 
 #![doc = include_str!("../README.md")]
 #![doc(
@@ -6,41 +7,115 @@
     html_logo_url = "https://kura.pro/sitemap-gen/images/logos/sitemap-gen.svg",
     html_root_url = "https://docs.rs/sitemap-gen"
 )]
-#![crate_name = "sitemap_gen"]
-#![crate_type = "lib"]
+#![warn(
+    clippy::all,
+    clippy::pedantic,
+    clippy::nursery,
+    clippy::cargo,
+    missing_docs
+)]
+#![deny(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    clippy::panic,
+    clippy::result_unit_err,
+    clippy::clone_on_ref_ptr
+)]
 
-//! A Rust library for generating and managing sitemaps.
+//! # Sitemap Generator Library
 //!
-//! This crate provides functionality to create, modify, and serialize XML sitemaps according to the [Sitemaps XML format](https://www.sitemaps.org/protocol.html).
-//! It includes support for handling various sitemap-specific data types and error conditions.
+//! A comprehensive Rust library for generating and managing XML sitemaps according to the
+//! [Sitemaps XML format](https://www.sitemaps.org/protocol.html) specification.
+//!
+//! ## Key Features
+//!
+//! - Create and manage XML sitemaps with proper validation
+//! - Support for URL normalization and deduplication
+//! - Customizable change frequencies and last modification dates
+//! - Comprehensive error handling with detailed diagnostics
+//! - Size and entry count validation according to sitemap standards
+//!
+//! ## Example Usage
+//!
+//! ```rust
+//! use sitemap_gen::prelude::*;
+//! use url::Url;
+//!
+//! # fn main() -> SitemapResult<()> {
+//! let mut sitemap = Sitemap::new();
+//!
+//! // Create a sitemap entry
+//! let entry = SiteMapData {
+//!     loc: Url::parse("https://example.com")?,
+//!     lastmod: "2024-10-08".to_string(),
+//!     changefreq: ChangeFreq::Daily,
+//! };
+//!
+//! // Add the entry and generate XML
+//! sitemap.add_entry(entry)?;
+//! let xml = sitemap.to_xml()?;
+//! # Ok(())
+//! # }
+//! ```
 
-/// Contains error types specific to sitemap operations.
-///
-/// This module defines a comprehensive set of error types that can occur during
-/// sitemap creation, modification, and serialization processes.
+/// Configuration constants for sitemap generation and validation.
+pub mod config {
+    /// Maximum allowed size of a sitemap in bytes (10MB).
+    pub const MAX_SITEMAP_SIZE: usize = 10 * 1024 * 1024;
+
+    /// Maximum number of URLs allowed in a single sitemap.
+    pub const MAX_URLS: usize = 50_000;
+
+    /// Default XML namespace for sitemaps.
+    pub const SITEMAP_XMLNS: &str =
+        "http://www.sitemaps.org/schemas/sitemap/0.9";
+}
+
+/// Error types and handling for sitemap operations.
 pub mod error;
 
-/// Provides the core functionality for creating and managing sitemaps.
-///
-/// This module contains the main structures and functions for working with sitemaps,
-/// including creating sitemap entries, setting change frequencies, and serializing to XML.
+/// Core sitemap functionality and data structures.
 pub mod sitemap;
 
-/// Utility functions and helper methods for sitemap operations.
+/// Utility functions for sitemap generation and management.
 pub mod utils;
 
-// Re-exports
+// Re-exports for convenience
+pub use config::{MAX_SITEMAP_SIZE, MAX_URLS, SITEMAP_XMLNS};
 pub use error::SitemapError;
 pub use sitemap::{
     convert_date_format, create_site_map_data, ChangeFreq, SiteMapData,
     Sitemap,
 };
 
+/// Current crate version.
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 /// Result type alias for sitemap operations.
+///
+/// This type is used throughout the library to handle operations that might fail.
+/// The error type is always [`SitemapError`].
+///
+/// See [`error::SitemapError`] for more details about possible error conditions.
 pub type SitemapResult<T> = Result<T, SitemapError>;
 
-/// A prelude module for convenient importing of commonly used items.
+/// Prelude module providing commonly used types and traits.
+///
+/// This module re-exports the most frequently used types and traits from the library,
+/// allowing users to import them with a single `use` statement.
+///
+/// # Example
+///
+/// ```rust
+/// use sitemap_gen::prelude::*;
+///
+/// # fn main() -> SitemapResult<()> {
+/// let sitemap = Sitemap::new();
+/// # Ok(())
+/// # }
+/// ```
 pub mod prelude {
+    pub use crate::config::{MAX_SITEMAP_SIZE, MAX_URLS};
     pub use crate::error::SitemapError;
     pub use crate::sitemap::{ChangeFreq, SiteMapData, Sitemap};
     pub use crate::SitemapResult;
@@ -48,157 +123,86 @@ pub mod prelude {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use url::Url;
 
-    use super::*;
-    use crate::error::SitemapError;
-    use crate::sitemap::{ChangeFreq, SiteMapData, Sitemap};
-    use crate::SitemapResult;
-
     #[test]
-    fn test_create_sitemap() {
-        // Create an empty sitemap
+    fn test_sitemap_creation() -> SitemapResult<()> {
         let mut sitemap = Sitemap::new();
-
-        // Create a SiteMapData entry
         let entry = SiteMapData {
-            loc: Url::parse("http://example.com")
-                .expect("Failed to parse URL"),
+            loc: Url::parse("http://example.com")?,
             lastmod: "2024-10-08".to_string(),
             changefreq: ChangeFreq::Daily,
         };
 
-        // Add the entry to the sitemap
-        sitemap.add_entry(entry).expect("Failed to add entry");
-
-        // Verify the sitemap contains the correct data
+        sitemap.add_entry(entry)?;
         assert_eq!(sitemap.len(), 1);
         assert!(!sitemap.is_empty());
+        Ok(())
     }
 
     #[test]
-    fn test_serialize_sitemap() {
-        // Create a new sitemap and add an entry
+    fn test_sitemap_serialization() -> SitemapResult<()> {
         let mut sitemap = Sitemap::new();
         let entry = SiteMapData {
-            loc: Url::parse("http://example.com")
-                .expect("Failed to parse URL"),
+            loc: Url::parse("http://example.com")?,
             lastmod: "2024-10-08".to_string(),
             changefreq: ChangeFreq::Daily,
         };
 
-        sitemap.add_entry(entry).expect("Failed to add entry");
+        sitemap.add_entry(entry)?;
+        let xml = sitemap.to_xml()?;
 
-        // Serialize the sitemap to XML
-        let serialized =
-            sitemap.to_xml().expect("Failed to serialize sitemap");
-
-        // Assert that the serialized XML contains the correct information
-        assert!(serialized.contains("<url>"));
-        assert!(serialized.contains("<loc>http://example.com/</loc>")); // Note the trailing slash
-        assert!(serialized.contains("<changefreq>daily</changefreq>"));
-        assert!(serialized.contains("<lastmod>2024-10-08</lastmod>"));
+        assert!(xml.contains("<urlset"));
+        assert!(xml.contains("<url>"));
+        assert!(xml.contains("<loc>http://example.com/</loc>"));
+        assert!(xml.contains("<changefreq>daily</changefreq>"));
+        assert!(xml.contains("<lastmod>2024-10-08</lastmod>"));
+        Ok(())
     }
 
     #[test]
-    fn test_invalid_url_error() {
-        // Try to add an entry with an invalid URL and expect an error
+    fn test_invalid_url() {
         let mut sitemap = Sitemap::new();
-
-        let invalid_url = Url::parse("invalid-url");
-        let result = match invalid_url {
-            Ok(valid_url) => sitemap.add_entry(SiteMapData {
-                loc: valid_url,
+        let result = Url::parse("invalid-url").map(|url| {
+            sitemap.add_entry(SiteMapData {
+                loc: url,
                 lastmod: "2024-10-08".to_string(),
                 changefreq: ChangeFreq::Daily,
-            }),
-            Err(e) => Err(SitemapError::UrlError(e)),
-        };
+            })
+        });
 
-        // Assert that the result is an error due to an invalid URL
-        assert!(matches!(result, Err(SitemapError::UrlError(_))));
+        assert!(result.is_err());
     }
 
     #[test]
-    fn test_convert_date_format() {
-        // Test converting date formats using the helper function
-        let date = "2024-10-08T00:00:00Z";
-        let converted = convert_date_format(date);
-        assert_eq!(converted, "2024-10-08");
+    fn test_date_conversion() -> () {
+        let formatted = convert_date_format("20 May 2023");
+        assert_eq!(formatted, "2023-05-20");
     }
 
     #[test]
-    fn test_change_freq_enum() {
-        // Test the ChangeFreq enum values
-        assert_eq!(ChangeFreq::Daily.to_string(), "daily");
-        assert_eq!(ChangeFreq::Monthly.to_string(), "monthly");
-    }
-
-    #[test]
-    fn test_sitemap_data_creation() {
-        // Test creating a new SiteMapData instance
-        let sitemap_entry = SiteMapData {
-            loc: Url::parse("http://example.com")
-                .expect("Failed to parse URL"),
-            lastmod: "2024-10-08".to_string(),
-            changefreq: ChangeFreq::Daily,
-        };
-
-        // Create an empty sitemap and add the entry
+    fn test_size_limits() -> SitemapResult<()> {
         let mut sitemap = Sitemap::new();
-        sitemap
-            .add_entry(sitemap_entry)
-            .expect("Failed to add entry");
+        let url = Url::parse("http://example.com")?;
 
-        // Check that the entry was added
-        assert_eq!(sitemap.len(), 1);
-    }
+        // Add MAX_URLS entries
+        for i in 0..MAX_URLS {
+            sitemap.add_entry(SiteMapData {
+                loc: Url::parse(&format!("{}?id={}", url, i))?,
+                lastmod: "2024-10-08".to_string(),
+                changefreq: ChangeFreq::Daily,
+            })?;
+        }
 
-    #[test]
-    fn test_sitemap_error_handling() {
-        // Test various error types defined in SitemapError
-        let url_error: SitemapError =
-            SitemapError::UrlError(url::ParseError::EmptyHost);
-        let io_error: SitemapError =
-            SitemapError::IoError(std::io::Error::new(
-                std::io::ErrorKind::NotFound,
-                "File not found",
-            ));
-
-        assert!(matches!(url_error, SitemapError::UrlError(_)));
-        assert!(matches!(io_error, SitemapError::IoError(_)));
-    }
-
-    #[test]
-    fn test_sitemap_result() {
-        // Test that SitemapResult works with Ok and Err variants
-        let success: SitemapResult<&str> = Ok("Success");
-        let failure: SitemapResult<&str> =
-            Err(SitemapError::UrlError(url::ParseError::EmptyHost));
-
-        assert!(success.is_ok());
-        assert!(failure.is_err());
-    }
-    #[test]
-    fn test_valid_url_addition() {
-        // Create a new empty sitemap
-        let mut sitemap = Sitemap::new();
-
-        // Try to add a valid URL
-        let valid_url = Url::parse("http://example.com")
-            .expect("Failed to parse valid URL");
-
+        // Try to add one more
         let result = sitemap.add_entry(SiteMapData {
-            loc: valid_url,
+            loc: url,
             lastmod: "2024-10-08".to_string(),
             changefreq: ChangeFreq::Daily,
         });
 
-        // Assert that the entry was successfully added
-        assert!(result.is_ok(), "Failed to add valid URL to sitemap");
-
-        // Check that the sitemap now contains the entry
-        assert_eq!(sitemap.len(), 1);
-        assert!(!sitemap.is_empty());
+        assert!(result.is_err());
+        Ok(())
     }
 }

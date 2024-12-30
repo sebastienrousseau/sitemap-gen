@@ -1,3 +1,6 @@
+// Copyright © 2025 Sitemap Gen. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 use crate::{
     ChangeFreq, SiteMapData, Sitemap, SitemapError, SitemapResult,
 };
@@ -568,39 +571,62 @@ mod tests {
         use std::sync::{Arc, Mutex};
         use std::thread;
 
+        // Create test URLs
         let urls = Arc::new(Mutex::new(vec![
-            Url::parse("http://example.com").unwrap(),
-            Url::parse("https://example.org").unwrap(),
+            Url::parse("http://example.com")
+                .map_err(SitemapError::UrlError)?,
+            Url::parse("https://example.org")
+                .map_err(SitemapError::UrlError)?,
         ]));
 
         let sitemap_result = Arc::new(Mutex::new(Sitemap::new()));
 
+        // Spawn threads
         let handles: Vec<_> = (0..10)
             .map(|_| {
                 let urls = Arc::clone(&urls);
                 let sitemap_result = Arc::clone(&sitemap_result);
 
-                thread::spawn(move || {
-                    let mut sitemap = sitemap_result.lock().unwrap();
-                    let urls = urls.lock().unwrap();
+                thread::spawn(move || -> SitemapResult<()> {
+                    let sitemap =
+                        &mut sitemap_result.lock().map_err(|e| {
+                            SitemapError::CustomError(e.to_string())
+                        })?;
+
+                    let urls = urls.lock().map_err(|e| {
+                        SitemapError::CustomError(e.to_string())
+                    })?;
+
                     for url in urls.iter() {
-                        let entry = SiteMapData {
-                            loc: url.clone(),
-                            lastmod: "2024-01-01".to_string(),
-                            changefreq: ChangeFreq::Weekly,
-                        };
-                        sitemap.add_entry(entry).unwrap();
+                        let entry = SiteMapData::new(
+                            url.clone(),
+                            "2024-01-01".to_string(),
+                            ChangeFreq::Weekly,
+                        );
+                        sitemap.add_entry(entry)?;
                     }
+                    Ok(())
                 })
             })
             .collect();
 
+        // Join threads and collect results
         for handle in handles {
-            handle.join().unwrap();
+            handle.join().map_err(|_| {
+                SitemapError::CustomError("Thread panicked".to_string())
+            })??;
         }
 
-        let sitemap = sitemap_result.lock().unwrap();
-        assert_eq!(sitemap.entry_count(), 20, "Sitemap should contain 20 entries after concurrent generation");
+        // Verify results
+        let sitemap = sitemap_result
+            .lock()
+            .map_err(|e| SitemapError::CustomError(e.to_string()))?;
+
+        assert_eq!(
+        sitemap.len(),
+        20,
+        "Sitemap should contain 20 entries after concurrent generation"
+    );
 
         Ok(())
     }

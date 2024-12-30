@@ -1,3 +1,6 @@
+// Copyright © 2025 Sitemap Gen. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 //! # Sitemap Generator CLI
 //!
 //! This command-line application allows users to generate XML sitemaps.

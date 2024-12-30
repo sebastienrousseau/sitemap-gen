@@ -1,3 +1,6 @@
+// Copyright © 2025 Sitemap Gen. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 //! Error types for the sitemap library.
 //!
 //! This module defines various error types that can occur during sitemap operations,
@@ -72,18 +75,19 @@ impl SitemapError {
     ///
     /// # Returns
     /// A string slice describing the context of the error.
-    pub fn context(&self) -> &'static str {
+    #[must_use]
+    pub const fn context(&self) -> &'static str {
         match self {
-            SitemapError::XmlWriteError(_) => "Error occurred while writing XML data",
-            SitemapError::XmlParseError(_) => "Error occurred while parsing XML data",
-            SitemapError::DateError(_) => "Error occurred while parsing or formatting dates",
-            SitemapError::UrlError(_) => "Error occurred while parsing URLs",
-            SitemapError::IoError(_) => "Error occurred during file or network operations",
-            SitemapError::EncodingError(_) => "Error occurred during UTF-8 string encoding or decoding",
-            SitemapError::InvalidChangeFreq(_) => "An invalid change frequency value was provided",
-            SitemapError::CustomError(_) => "An unexpected error occurred",
-            SitemapError::SitemapTooLarge => "The generated sitemap exceeds the maximum allowed size",
-            SitemapError::MaxUrlLimitExceeded(_) => "The number of URLs exceeds the maximum allowed limit",
+            Self::XmlWriteError(_) => "Error occurred while writing XML data",
+            Self::XmlParseError(_) => "Error occurred while parsing XML data",
+            Self::DateError(_) => "Error occurred while parsing or formatting dates",
+            Self::UrlError(_) => "Error occurred while parsing URLs",
+            Self::IoError(_) => "Error occurred during file or network operations",
+            Self::EncodingError(_) => "Error occurred during UTF-8 string encoding or decoding",
+            Self::InvalidChangeFreq(_) => "An invalid change frequency value was provided",
+            Self::CustomError(_) => "An unexpected error occurred",
+            Self::SitemapTooLarge => "The generated sitemap exceeds the maximum allowed size",
+            Self::MaxUrlLimitExceeded(_) => "The number of URLs exceeds the maximum allowed limit",
         }
     }
 }

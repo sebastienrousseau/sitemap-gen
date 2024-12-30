@@ -44,21 +44,18 @@ path = "src/main.rs"
 
 [dependencies]
 # Dependencies required for building and running the project.
-clap = "4.5"
+clap = "4.5.23"
 dtt = "0.0.8"
-env_logger = "0.11"
-html-generator = "0.0.2"
-indicatif = "0.17"
-lazy_static = "1.5"
-log = "0.4"
-regex = "1.11"
-scraper = "0.22"
-tempfile = "3.13"
-thiserror = "2.0"
-time = "0.3"
-tokio = "1.40"
-url = "2.5"
-xml-rs = "0.8"
+env_logger = "0.11.6"
+indicatif = "0.17.9"
+lazy_static = "1.5.0"
+log = "0.4.22"
+regex = "1.11.1"
+tempfile = "3.14.0"
+thiserror = "2.0.9"
+time = "0.3.37"
+url = "2.5.4"
+xml-rs = "0.8.24"
 
 # -----------------------------------------------------------------------------
 # Build Dependencies
@@ -66,7 +63,7 @@ xml-rs = "0.8"
 
 [build-dependencies]
 # Dependencies for build scripts.
-version_check = "0.9"
+version_check = "0.9.5"
 
 # -----------------------------------------------------------------------------
 # Development Dependencies
@@ -74,10 +71,10 @@ version_check = "0.9"
 
 [dev-dependencies]
 # Dependencies required for testing and development.
-criterion = "0.5"
-assert_fs = "1.1"
-predicates = "3.1"
-pretty_assertions = "1.4"
+criterion = "0.5.1"
+assert_fs = "1.1.2"
+predicates = "3.1.3"
+pretty_assertions = "1.4.1"
 
 # -----------------------------------------------------------------------------
 # Examples
