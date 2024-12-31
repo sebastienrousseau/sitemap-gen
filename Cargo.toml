@@ -45,7 +45,7 @@ path = "src/main.rs"
 [dependencies]
 # Dependencies required for building and running the project.
 clap = "4.5"
-dtt = "0.0.8"
+dtt = "0.0.9"
 env_logger = "0.11"
 html-generator = "0.0.2"
 indicatif = "0.17"
