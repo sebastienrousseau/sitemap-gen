@@ -74,7 +74,7 @@ version_check = "0.9"
 
 [dev-dependencies]
 # Dependencies required for testing and development.
-criterion = "0.5"
+criterion = "0.6"
 assert_fs = "1.1"
 predicates = "3.1"
 pretty_assertions = "1.4"
