@@ -59,6 +59,7 @@ time = "0.3"
 tokio = "1.40"
 url = "2.5"
 xml-rs = "0.8"
+commons = { git = "https://github.com/sebastienrousseau/commons", tag = "v0.0.1", default-features = false, features = ["error", "time", "logging"] }
 
 # -----------------------------------------------------------------------------
 # Build Dependencies
