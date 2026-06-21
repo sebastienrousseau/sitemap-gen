@@ -3,8 +3,8 @@
 use criterion::{
     criterion_group, criterion_main, BatchSize, Criterion,
 };
-use std::hint::black_box;
 use sitemap_gen::{ChangeFreq, SiteMapData, Sitemap};
+use std::hint::black_box;
 use url::Url;
 
 fn generate_sitemap(n: usize) -> Sitemap {
