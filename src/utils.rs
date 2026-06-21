@@ -289,7 +289,7 @@ pub fn write_output(xml: &str, output_file: &str) -> SitemapResult<()> {
 /// A string representation of the date in YYYY-MM-DD format
 pub fn format_date(dt: DateTime) -> String {
     dt.format("[year]-[month]-[day]")
-        .unwrap_or_else(|_| "".to_string())
+        .unwrap_or_else(|_| String::new())
 }
 
 #[cfg(test)]
