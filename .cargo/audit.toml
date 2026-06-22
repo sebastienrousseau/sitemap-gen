@@ -1,0 +1,24 @@
+# Configuration for `cargo audit`.
+# Reference: https://docs.rs/cargo-audit/latest/cargo_audit/config/struct.AuditConfig.html
+
+[advisories]
+# Ignored RUSTSEC advisories. Each entry MUST include a justification.
+#
+# All ignored entries here are "unmaintained" notices for transitive
+# dependencies of `criterion` (benchmark harness) or `cargo-audit`
+# itself. No first-party fix is available until upstream upgrades.
+ignore = [
+    # bincode: pulled in transitively by criterion. No security issue,
+    # just unmaintained pending criterion 0.7 migration.
+    "RUSTSEC-2025-0141",
+    # fxhash: pulled in transitively by criterion / plotters.
+    "RUSTSEC-2025-0057",
+    # number_prefix: pulled in transitively by indicatif.
+    "RUSTSEC-2025-0119",
+    # paste: pulled in by transitive macro deps; widely used, no exploit.
+    "RUSTSEC-2024-0436",
+    # proc-macro-error2: pulled in by transitive proc-macro deps.
+    "RUSTSEC-2026-0173",
+    # yaml-rust: pulled in transitively by criterion's serde_yaml chain.
+    "RUSTSEC-2024-0320",
+]

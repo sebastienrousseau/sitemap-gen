@@ -4,9 +4,9 @@
 
 [package]
 name = "sitemap-gen"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
-rust-version = "1.56.0"
+rust-version = "1.66.0"
 license = "MIT OR Apache-2.0"
 description = """
 A robust Rust library designed for efficient generation and optimization of sitemaps, supporting various formats and customizations.
@@ -52,13 +52,14 @@ indicatif = "0.17"
 lazy_static = "1.5"
 log = "0.4"
 regex = "1.11"
-scraper = "0.22"
+scraper = "0.23"
 tempfile = "3.13"
 thiserror = "2.0"
 time = "0.3"
-tokio = "1.40"
+tokio = "1.44"
 url = "2.5"
 xml-rs = "0.8"
+commons = { package = "euxis-commons", version = "0.0.2", default-features = false, features = ["error", "time", "logging"] }
 
 # -----------------------------------------------------------------------------
 # Build Dependencies
@@ -74,7 +75,7 @@ version_check = "0.9"
 
 [dev-dependencies]
 # Dependencies required for testing and development.
-criterion = "0.5"
+criterion = "0.6"
 assert_fs = "1.1"
 predicates = "3.1"
 pretty_assertions = "1.4"
@@ -152,7 +153,9 @@ future_incompatible = { level = "deny", priority = -1 }
 keyword_idents = { level = "deny", priority = -1 }
 macro_use_extern_crate = "deny"
 meta_variable_misuse = "deny"
-missing_fragment_specifier = "deny"
+# `missing_fragment_specifier` was promoted to a hard error in newer
+# rustc; the lint is removed and re-declaring it triggers
+# `renamed_and_removed_lints`.
 noop_method_call = "deny"
 rust_2018_idioms = { level = "deny", priority = -1 }
 rust_2021_compatibility = { level = "deny", priority = -1 }
@@ -195,7 +198,7 @@ debug = false
 debug-assertions = false
 incremental = false
 lto = true
-opt-level = "s"
+opt-level = 3
 overflow-checks = false
 panic = "abort"
 rpath = false

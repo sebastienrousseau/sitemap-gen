@@ -9,6 +9,5 @@ build
 Icon?
 src/.DS_Store
 tarpaulin-report.html
-Cargo.lock
-*.xml
-*.txt
+test_output.xml
+test_urls.txt

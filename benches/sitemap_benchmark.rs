@@ -1,9 +1,10 @@
 #![allow(missing_docs)]
 
 use criterion::{
-    black_box, criterion_group, criterion_main, BatchSize, Criterion,
+    criterion_group, criterion_main, BatchSize, Criterion,
 };
 use sitemap_gen::{ChangeFreq, SiteMapData, Sitemap};
+use std::hint::black_box;
 use url::Url;
 
 fn generate_sitemap(n: usize) -> Sitemap {
