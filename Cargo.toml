@@ -6,7 +6,7 @@
 name = "sitemap-gen"
 version = "0.0.2"
 edition = "2021"
-rust-version = "1.56.0"
+rust-version = "1.66.0"
 license = "MIT OR Apache-2.0"
 description = """
 A robust Rust library designed for efficient generation and optimization of sitemaps, supporting various formats and customizations.
@@ -153,7 +153,9 @@ future_incompatible = { level = "deny", priority = -1 }
 keyword_idents = { level = "deny", priority = -1 }
 macro_use_extern_crate = "deny"
 meta_variable_misuse = "deny"
-missing_fragment_specifier = "deny"
+# `missing_fragment_specifier` was promoted to a hard error in newer
+# rustc; the lint is removed and re-declaring it triggers
+# `renamed_and_removed_lints`.
 noop_method_call = "deny"
 rust_2018_idioms = { level = "deny", priority = -1 }
 rust_2021_compatibility = { level = "deny", priority = -1 }
