@@ -58,7 +58,7 @@ thiserror = "2.0"
 time = "0.3"
 tokio = "1.44"
 url = "2.5"
-xml-rs = "0.8"
+xml-rs = "1.0"
 commons = { package = "euxis-commons", version = "0.0.2", default-features = false, features = ["error", "time", "logging"] }
 
 # -----------------------------------------------------------------------------
