@@ -28,7 +28,7 @@ Or add to `Cargo.toml`:
 
 ```toml
 [dependencies]
-sitemap-gen = "0.0.2"
+sitemap-gen = "0.0.3"
 ```
 
 You need [Rust](https://rustup.rs/) 1.56.0 or later. Works on macOS, Linux, and Windows.
