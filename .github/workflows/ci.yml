@@ -34,4 +34,9 @@ jobs:
     uses: sebastienrousseau/pipelines/.github/workflows/docs.yml@main
     with:
       type: rust
+      # Writes a CNAME file into the Pages artifact. Without it the
+      # deployed site carries no custom domain, and doc.sitemap-gen.co
+      # served a GitHub 404 even though the repository's Pages settings
+      # named that domain -- the artifact is what actually binds it.
+      cname: doc.sitemap-gen.co
       redirect-crate: sitemap-gen
