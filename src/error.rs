@@ -133,7 +133,8 @@ mod tests {
             "Error occurred while parsing URLs"
         );
 
-        let io_error = SitemapError::IoError(io::Error::other("I/O Error"));
+        let io_error =
+            SitemapError::IoError(io::Error::other("I/O Error"));
         assert_eq!(
             io_error.context(),
             "Error occurred during file or network operations"
@@ -160,7 +161,8 @@ mod tests {
             SitemapError::UrlError(url::ParseError::EmptyHost);
         assert_eq!(url_error.to_string(), "URL error: empty host");
 
-        let io_error = SitemapError::IoError(io::Error::other("I/O Error"));
+        let io_error =
+            SitemapError::IoError(io::Error::other("I/O Error"));
         assert_eq!(io_error.to_string(), "I/O error: I/O Error");
 
         let custom_error = SitemapError::CustomError(
