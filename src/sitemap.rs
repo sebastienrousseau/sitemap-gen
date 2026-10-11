@@ -127,8 +127,9 @@ pub fn create_site_map_data(
     })
 }
 
-static DATE_REGEX: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(\d{2}) (\w{3}) (\d{4})").expect("valid date regex"));
+static DATE_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(\d{2}) (\w{3}) (\d{4})").expect("valid date regex")
+});
 
 /// Converts date strings from various formats to "YYYY-MM-DD".
 ///
