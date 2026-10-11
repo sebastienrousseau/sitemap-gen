@@ -2,11 +2,11 @@
 
 use crate::error::{SitemapError, SitemapResult};
 use dtt::datetime::DateTime;
-use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
+use std::sync::LazyLock;
 use url::Url;
 use xml::writer::{EventWriter, XmlEvent};
 
@@ -127,10 +127,9 @@ pub fn create_site_map_data(
     })
 }
 
-lazy_static! {
-    static ref DATE_REGEX: Regex =
-        Regex::new(r"(\d{2}) (\w{3}) (\d{4})").unwrap();
-}
+static DATE_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(\d{2}) (\w{3}) (\d{4})").expect("valid date regex")
+});
 
 /// Converts date strings from various formats to "YYYY-MM-DD".
 ///
@@ -272,8 +271,8 @@ impl Sitemap {
         // Close the <urlset> element
         writer.write(XmlEvent::end_element())?;
 
-        // Convert the output Vec<u8> directly into a string without intermediate allocations
-        let xml = unsafe { String::from_utf8_unchecked(output) };
+        // Convert the output Vec<u8> safely into a UTF-8 string
+        let xml = String::from_utf8(output)?;
 
         // Check size before returning to ensure the sitemap isn't too large
         if xml.len() > 10 * 1024 * 1024 {
