@@ -40,3 +40,16 @@ jobs:
       # named that domain -- the artifact is what actually binds it.
       cname: doc.sitemap-gen.co
       redirect-crate: sitemap-gen
+
+  # Every version-bearing file must name Cargo.toml's version, so a tag
+  # can never again ship with the previous one (see the script).
+  release-preflight:
+    name: Release preflight
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - run: ./scripts/release-preflight.sh

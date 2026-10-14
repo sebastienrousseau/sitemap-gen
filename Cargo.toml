@@ -4,9 +4,9 @@
 
 [package]
 name = "sitemap-gen"
-version = "0.0.5"
+version = "0.0.7"
 edition = "2021"
-rust-version = "1.80.0"
+rust-version = "1.89.0"
 license = "MIT OR Apache-2.0"
 description = """
 A robust Rust library designed for efficient generation and optimization of sitemaps, supporting various formats and customizations.
