@@ -8,7 +8,6 @@ use std::fmt;
 use std::str::FromStr;
 use std::sync::LazyLock;
 use url::Url;
-use xml::writer::{EventWriter, XmlEvent};
 
 /// Maximum number of URLs allowed in a sitemap.
 const MAX_URLS: usize = 50_000;
@@ -228,51 +227,44 @@ impl Sitemap {
     /// # Returns
     /// A string containing the XML representation of the sitemap, or an error if generation fails.
     pub fn to_xml(&self) -> SitemapResult<String> {
-        // Pre-allocate enough space in the Vec to avoid reallocations.
-        let estimated_size = self.entries.len() * 300; // Rough estimate of average entry size in bytes
-        let mut output = Vec::with_capacity(estimated_size);
-        let mut writer = EventWriter::new(&mut output);
-
-        writer.write(XmlEvent::StartDocument {
-            version: xml::common::XmlVersion::Version10,
-            encoding: Some("UTF-8"),
-            standalone: None,
-        })?;
-
-        writer.write(XmlEvent::start_element("urlset").default_ns(
-            "http://www.sitemaps.org/schemas/sitemap/0.9",
-        ))?;
+        const SITEMAP_NS: &str =
+            "http://www.sitemaps.org/schemas/sitemap/0.9";
+        let mut doc = oxml::Document::empty();
+        let urlset =
+            doc.append_element(doc.root(), Some(SITEMAP_NS), "urlset")?;
+        let _ = doc.declare_namespace(urlset, None, SITEMAP_NS)?;
 
         for entry in &self.entries {
-            // Start the <url> element
-            writer.write(XmlEvent::start_element("url"))?;
+            let url =
+                doc.append_element(urlset, Some(SITEMAP_NS), "url")?;
 
-            // <loc> entry
-            writer.write(XmlEvent::start_element("loc"))?;
-            writer.write(XmlEvent::characters(entry.loc.as_ref()))?;
-            writer.write(XmlEvent::end_element())?;
+            let loc =
+                doc.append_element(url, Some(SITEMAP_NS), "loc")?;
+            let _ = doc.append_text(loc, entry.loc.as_ref())?;
 
-            // <lastmod> entry
-            writer.write(XmlEvent::start_element("lastmod"))?;
-            writer.write(XmlEvent::characters(&entry.lastmod))?;
-            writer.write(XmlEvent::end_element())?;
+            let lastmod =
+                doc.append_element(url, Some(SITEMAP_NS), "lastmod")?;
+            let _ = doc.append_text(lastmod, &entry.lastmod)?;
 
-            // <changefreq> entry
-            writer.write(XmlEvent::start_element("changefreq"))?;
-            writer.write(XmlEvent::characters(
-                entry.changefreq.as_str(),
-            ))?;
-            writer.write(XmlEvent::end_element())?;
-
-            // End the <url> element
-            writer.write(XmlEvent::end_element())?;
+            let changefreq = doc.append_element(
+                url,
+                Some(SITEMAP_NS),
+                "changefreq",
+            )?;
+            let _ =
+                doc.append_text(changefreq, entry.changefreq.as_str())?;
         }
 
-        // Close the <urlset> element
-        writer.write(XmlEvent::end_element())?;
-
-        // Convert the output Vec<u8> safely into a UTF-8 string
-        let xml = String::from_utf8(output)?;
+        // Pre-allocate enough space in the String to avoid reallocations.
+        let estimated_size = self.entries.len() * 300 + 64;
+        let mut xml = String::with_capacity(estimated_size);
+        xml.push_str("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        let options = oxml::SerialiseOptions {
+            indent: None,
+            empty_elements: oxml::EmptyElement::Expanded,
+            newline: oxml::Newline::Lf,
+        };
+        let _ = doc.write_xml_with(&mut xml, options);
 
         // Check size before returning to ensure the sitemap isn't too large
         if xml.len() > 10 * 1024 * 1024 {
