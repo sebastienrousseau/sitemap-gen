@@ -9,12 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Replaced `xml-rs` with `oxml` 0.0.13** for memory-safe, zero-`unsafe`
+  W3C XML 1.0 sitemap serialization and parsing.
 - **Breaking: the MSRV is now Rust 1.89.0** (was 1.80.0), one floor
   shared with the maintainer's other Rust crates. `rust-version` in
   `Cargo.toml` is the only place sitemap-gen states it.
 
 ### Dependencies
 
+- Added `oxml` 0.0.13 and removed `xml-rs` 1.0.
 - The minor-and-patch dependency group (Dependabot #40).
 
 ## [0.0.2] - 2026-06-21
