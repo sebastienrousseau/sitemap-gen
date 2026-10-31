@@ -66,16 +66,12 @@ fn date_error_example() -> Result<(), SitemapError> {
 fn xml_error_example() -> Result<(), SitemapError> {
     println!("\n🦀 XML Error Example");
     println!("---------------------------------------------");
-    // Create a situation where writing XML might fail
-    let mut writer =
-        xml::writer::EmitterConfig::new().create_writer(Vec::new());
-    // Write a start element
-    let result =
-        writer.write(xml::writer::XmlEvent::start_element("root"));
-    // Now write the corresponding end element
-    let result = result.and_then(|_| {
-        writer.write(xml::writer::XmlEvent::end_element())
-    });
+    // Create a situation where building XML fails (adding a second root element)
+    let mut doc = oxml::Document::empty();
+    let root = doc.root();
+    let result = doc
+        .append_element(root, None, "root")
+        .and_then(|_| doc.append_element(root, None, "second_root"));
     match result {
         Ok(_) => {
             println!("    ❌ Unexpected success in writing XML")

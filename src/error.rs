@@ -24,11 +24,11 @@ use thiserror::Error;
 pub enum SitemapError {
     /// Error occurred during XML writing.
     #[error("XML writing error: {0}")]
-    XmlWriteError(#[from] xml::writer::Error),
+    XmlWriteError(#[from] oxml::tree::NodeError),
 
     /// Error occurred during XML parsing.
     #[error("XML parsing error: {0}")]
-    XmlParseError(#[from] xml::reader::Error),
+    XmlParseError(#[from] oxml::Error),
 
     /// Error occurred during date parsing or formatting.
     #[error("Date error: {0}")]
@@ -98,14 +98,15 @@ pub type SitemapResult<T> = Result<T, SitemapError>;
 mod tests {
     use super::*;
     use std::io;
-    use xml::writer::{EventWriter, XmlEvent};
 
     #[test]
     fn test_error_creation_and_formatting() {
-        // Create a XML writing error
-        let mut writer = EventWriter::new(Vec::new());
-        let xml_write_result = writer.write(XmlEvent::end_element()); // This will cause an error because we're ending an element that wasn't started
-        let xml_write_error = xml_write_result.unwrap_err();
+        // Create an XML writing error by attempting to add a second root element
+        let mut doc = oxml::Document::empty();
+        let root = doc.root();
+        let _ = doc.append_element(root, None, "first").unwrap();
+        let xml_write_error =
+            doc.append_element(root, None, "second").unwrap_err();
         let sitemap_error =
             SitemapError::XmlWriteError(xml_write_error);
         assert!(sitemap_error
@@ -204,12 +205,7 @@ mod tests {
     #[test]
     fn test_xml_parse_error() {
         let xml = "<invalid>";
-        let reader = xml::reader::EventReader::from_str(xml);
-        let parse_result: Result<
-            Vec<xml::reader::XmlEvent>,
-            xml::reader::Error,
-        > = reader.into_iter().collect();
-        let xml_parse_error = parse_result.unwrap_err();
+        let xml_parse_error = oxml::parse(xml).unwrap_err();
         let sitemap_error =
             SitemapError::XmlParseError(xml_parse_error);
         assert!(sitemap_error
