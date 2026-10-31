@@ -1,0 +1,89 @@
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+# Release pipeline. Triggered by pushing a signed `v*` tag (e.g. `v0.0.7`)
+# or manually via `workflow_dispatch` (with optional `dry-run`).
+#
+# Jobs:
+#   1. `preflight`: Verifies tag-to-manifest version coherence and dated
+#      CHANGELOG entry via `./scripts/release-preflight.sh`.
+#   2. `ci`: Runs cross-platform lint, check, and test gates via
+#      `sebastienrousseau/pipelines/.github/workflows/rust-ci.yml@main`.
+#   3. `release`: Cross-compiles release archives for Linux (glibc/musl,
+#      x86_64/aarch64), macOS (x86_64/aarch64), and Windows (x86_64 MSVC),
+#      attests build provenance (SLSA), generates and uploads an SPDX SBOM,
+#      creates the GitHub Release, and publishes `sitemap-gen` to crates.io
+#      via OIDC Trusted Publishing (`rust-lang/crates-io-auth-action`).
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Build artefacts and SBOM without creating a GitHub release or publishing to crates.io'
+        default: false
+        type: boolean
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  # ── Gate 1: tag and version preflight ─────────────────────────────
+  preflight:
+    name: Release preflight
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Verify version and tag coherence
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            ./scripts/release-preflight.sh "${GITHUB_REF_NAME}"
+          else
+            ./scripts/release-preflight.sh
+          fi
+
+  # ── Gate 2: full cross-platform CI must pass before release ───────
+  ci:
+    needs: preflight
+    permissions:
+      contents: read
+      security-events: write
+    uses: sebastienrousseau/pipelines/.github/workflows/rust-ci.yml@main
+    with:
+      rust-version: 'stable'
+      run-coverage: false
+      run-cross-platform: true
+
+  # ── Release: cross-compile, SBOM, provenance, crates.io publish ───
+  release:
+    needs: [preflight, ci]
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+      packages: write
+    uses: sebastienrousseau/pipelines/.github/workflows/release.yml@main
+    with:
+      language: rust
+      dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
+      # `rust-targets` MUST be a pure JSON-encoded array of `{target, os}`
+      # objects (no YAML comments inside the block scalar) because the
+      # reusable workflow calls `fromJson(inputs.rust-targets)`.
+      rust-targets: |
+        [
+          {"target":"x86_64-unknown-linux-gnu",  "os":"ubuntu-latest"},
+          {"target":"aarch64-unknown-linux-gnu", "os":"ubuntu-latest"},
+          {"target":"x86_64-unknown-linux-musl", "os":"ubuntu-latest"},
+          {"target":"x86_64-apple-darwin",       "os":"macos-latest"},
+          {"target":"aarch64-apple-darwin",      "os":"macos-latest"},
+          {"target":"x86_64-pc-windows-msvc",    "os":"windows-latest"}
+        ]

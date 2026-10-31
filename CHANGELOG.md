@@ -5,11 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.0.7] - Unreleased
+## [0.0.7] - 2026-10-31
+
+### Added
+
+- Tag-driven GitHub Actions release workflow (`.github/workflows/release.yml`)
+  that runs `./scripts/release-preflight.sh`, cross-platform CI, cross-compiled
+  binary builds, SLSA provenance attestation, SPDX SBOM generation, and
+  crates.io publishing via OIDC Trusted Publishing.
 
 ### Changed
 
-- **Replaced `xml-rs` with `oxml` 0.0.13** for memory-safe, zero-`unsafe`
+- **Replaced `quick-xml` with `oxml` 0.0.13** for memory-safe, zero-`unsafe`
   W3C XML 1.0 sitemap serialization and parsing.
 - **Breaking: the MSRV is now Rust 1.89.0** (was 1.80.0), one floor
   shared with the maintainer's other Rust crates. `rust-version` in
@@ -17,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-- Added `oxml` 0.0.13 and removed `xml-rs` 1.0.
+- Added `oxml` 0.0.13 and removed `quick-xml` 0.39.
 - The minor-and-patch dependency group (Dependabot #40).
 
 ## [0.0.2] - 2026-06-21
