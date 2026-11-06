@@ -224,9 +224,12 @@ pub fn read_urls_from_file(filename: &str) -> SitemapResult<Vec<Url>> {
 ///
 /// # Returns
 ///
-/// A vector of normalized unique URLs
+/// A vector of normalized unique URLs, in the order each first appears
 pub fn normalize_urls(urls: Vec<Url>) -> Vec<Url> {
-    let mut normalized = HashSet::new();
+    // The set only detects duplicates; the Vec keeps first-seen order
+    // so the same input always yields the same sitemap.
+    let mut seen = HashSet::new();
+    let mut normalized = Vec::new();
     for mut url in urls {
         if !is_valid_url(&url) {
             warn!("Invalid URL scheme: {}", url);
@@ -236,11 +239,13 @@ pub fn normalize_urls(urls: Vec<Url>) -> Vec<Url> {
         if url.path().is_empty() || url.path() == "/" {
             url.set_path("/");
         }
-        if !normalized.insert(url.clone()) {
+        if seen.insert(url.clone()) {
+            normalized.push(url);
+        } else {
             warn!("Duplicate URL found after normalization: {}", url);
         }
     }
-    normalized.into_iter().collect()
+    normalized
 }
 
 /// Checks if a URL is valid for inclusion in the sitemap.
@@ -355,6 +360,39 @@ mod tests {
             .contains(&Url::parse("http://example.com/page").unwrap()));
         assert!(!normalized
             .contains(&Url::parse("ftp://example.net").unwrap()));
+    }
+
+    #[test]
+    fn test_normalize_urls_keeps_first_seen_order() {
+        // The sitemap lists URLs in the order normalize_urls returns
+        // them, so the same input must give the same output every run:
+        // first occurrence wins, later duplicates are dropped.
+        let input = [
+            "http://example.com/zeta",
+            "http://example.com/alpha",
+            "http://example.com/mid#section",
+            "http://example.com/zeta",
+            "http://example.com",
+            "http://example.com/alpha#top",
+            "http://example.com/beta",
+        ];
+        let urls =
+            input.iter().map(|u| Url::parse(u).unwrap()).collect();
+
+        let normalized: Vec<String> = normalize_urls(urls)
+            .into_iter()
+            .map(String::from)
+            .collect();
+        assert_eq!(
+            normalized,
+            [
+                "http://example.com/zeta",
+                "http://example.com/alpha",
+                "http://example.com/mid",
+                "http://example.com/",
+                "http://example.com/beta",
+            ]
+        );
     }
 
     #[test]

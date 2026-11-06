@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `normalize_urls` returns URLs in the order each first appears instead
+  of hash-set order, so the same input gives the same sitemap on every
+  run. Duplicates are still dropped, keeping the first occurrence.
+
 ### Removed
 
 - The `euxis-commons` and `time` dependencies. No code in the crate
