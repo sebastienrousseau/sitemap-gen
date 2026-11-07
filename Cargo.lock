@@ -408,15 +408,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "euxis-commons"
-version = "0.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cc1cf9c4720703ea04d9eb4a191ac8e43b597805742e102fb7eaa4d9c3f5b27"
-dependencies = [
- "thiserror",
-]
-
-[[package]]
 name = "fastrand"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1087,7 +1078,6 @@ dependencies = [
  "criterion",
  "dtt",
  "env_logger",
- "euxis-commons",
  "indicatif",
  "log",
  "oxml",
@@ -1096,7 +1086,6 @@ dependencies = [
  "regex",
  "tempfile",
  "thiserror",
- "time",
  "url",
  "version_check",
 ]
