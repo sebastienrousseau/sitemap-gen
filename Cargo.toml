@@ -4,7 +4,7 @@
 
 [package]
 name = "sitemap-gen"
-version = "0.0.7"
+version = "0.0.8"
 edition = "2021"
 rust-version = "1.89.0"
 license = "MIT OR Apache-2.0"
@@ -53,6 +53,8 @@ regex = "1.11"
 thiserror = "2.0"
 url = "2.5"
 oxml = { version = "0.0.13", default-features = false, features = ["std"] }
+# Optional: `gzip` compresses sitemaps and indexes for `.xml.gz` files.
+flate2 = { version = "1.1", default-features = false, features = ["rust_backend"], optional = true }
 
 # -----------------------------------------------------------------------------
 # Build Dependencies
@@ -101,6 +103,7 @@ debug = true
 # Features that can be enabled or disabled.
 default = []
 async = []
+gzip = ["dep:flate2"]
 
 # -----------------------------------------------------------------------------
 # Documentation Configuration

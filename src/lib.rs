@@ -26,11 +26,18 @@ pub mod error;
 /// including creating sitemap entries, setting change frequencies, and serializing to XML.
 pub mod sitemap;
 
+/// Sitemap index files and splitting for sites with more than 50,000 URLs.
+pub mod index;
+
 /// Utility functions and helper methods for sitemap operations.
 pub mod utils;
 
 // Re-exports
 pub use error::SitemapError;
+pub use index::{
+    build_sitemap_set, split_entries, SitemapIndex, SitemapIndexEntry,
+    SitemapSet,
+};
 pub use sitemap::{
     convert_date_format, create_site_map_data, ChangeFreq, SiteMapData,
     Sitemap,

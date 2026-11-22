@@ -212,6 +212,44 @@ impl Sitemap {
         Ok(())
     }
 
+    /// Adds an entry, or replaces the one with the same `loc`, so a
+    /// sitemap can be updated incrementally as pages change.
+    ///
+    /// # Returns
+    /// `Ok(true)` if an existing entry was replaced, `Ok(false)` if the
+    /// entry was added, or an error if adding it would exceed the limit.
+    pub fn upsert_entry(
+        &mut self,
+        entry: SiteMapData,
+    ) -> SitemapResult<bool> {
+        if let Some(existing) =
+            self.entries.iter_mut().find(|e| e.loc == entry.loc)
+        {
+            *existing = entry;
+            return Ok(true);
+        }
+        self.add_entry(entry)?;
+        Ok(false)
+    }
+
+    /// Removes the entry for `loc`, returning whether there was one.
+    pub fn remove_entry(&mut self, loc: &Url) -> bool {
+        let before = self.entries.len();
+        self.entries.retain(|e| &e.loc != loc);
+        self.entries.len() != before
+    }
+
+    /// The newest non-empty `lastmod` among the entries. Dates in
+    /// `YYYY-MM-DD` form sort as text, so the greatest is the newest.
+    pub fn latest_lastmod(&self) -> Option<String> {
+        self.entries
+            .iter()
+            .map(|e| e.lastmod.as_str())
+            .filter(|s| !s.is_empty())
+            .max()
+            .map(str::to_owned)
+    }
+
     /// Returns the current number of entries in the sitemap.
     pub fn len(&self) -> usize {
         self.entries.len()
@@ -348,6 +386,33 @@ mod tests {
             }),
             Err(SitemapError::MaxUrlLimitExceeded(_))
         ));
+        Ok(())
+    }
+
+    #[test]
+    fn upsert_replaces_by_loc_and_remove_drops() -> SitemapResult<()> {
+        let loc = Url::parse("https://example.com/a")?;
+        let mut sitemap = Sitemap::new();
+        let first = SiteMapData {
+            loc: loc.clone(),
+            lastmod: "2026-01-01".to_string(),
+            changefreq: ChangeFreq::Weekly,
+        };
+        assert!(!sitemap.upsert_entry(first.clone())?);
+        let changed = SiteMapData {
+            lastmod: "2026-04-05".to_string(),
+            ..first
+        };
+        assert!(sitemap.upsert_entry(changed)?);
+        assert_eq!(sitemap.len(), 1);
+        assert_eq!(
+            sitemap.latest_lastmod().as_deref(),
+            Some("2026-04-05")
+        );
+        assert!(sitemap.remove_entry(&loc));
+        assert!(!sitemap.remove_entry(&loc));
+        assert!(sitemap.is_empty());
+        assert_eq!(sitemap.latest_lastmod(), None);
         Ok(())
     }
 
