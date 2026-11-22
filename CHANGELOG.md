@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.8] - 2026-11-22
+
+### Added
+
+- Sitemap index support for sites with more than 50,000 URLs (#12).
+  `split_entries` cuts entries into sitemaps of at most 50,000 URLs,
+  in order; `SitemapIndex` serialises a `<sitemapindex>` and refreshes
+  one listed sitemap's `lastmod` in place through `upsert`;
+  `build_sitemap_set` does both, naming the children `sitemap-<n>.xml`
+  under a base URL and dating each from its newest entry.
+- Incremental updates: `Sitemap::upsert_entry` replaces the entry with
+  the same `loc` (or adds it), `Sitemap::remove_entry` drops one, and
+  `Sitemap::latest_lastmod` returns the newest `lastmod`.
+- `gzip` feature: `index::gzip` compresses a sitemap or index for
+  serving as `.xml.gz`, with `flate2`'s pure-Rust backend. Off by
+  default, so default builds gain no dependency.
+
+### Security
+
+- `url` 2.5.9 (RUSTSEC-2026-0592, stack overflow in `Url::origin()`
+  on nested `blob:` URLs) and `rustix` 1.1.6 (RUSTSEC-2026-0486,
+  xattr functions on a zero-length buffer), both transitive.
+
+### Changed
+
+- `log` 0.4.35 (Dependabot #45).
+
 ### Fixed
 
 - `normalize_urls` returns URLs in the order each first appears instead
