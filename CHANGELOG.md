@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `log` 0.4.35 (Dependabot #45).
+- `clap` 4.6.9 and `regex` 1.13.2 (Dependabot #49).
 
 ### Fixed
 
